@@ -4,8 +4,9 @@ public static class EmailVerificationEndpoints
 {
     public static void MapEmailVerificationEndpoints(this WebApplication app)
     {
-        var group = app.MapGroup("/api/verification")
-            .WithTags("Verification")
+        RouteGroupBuilder group = app.MapGroup("/api/verification")
+            .WithTags("Email Verification")
             .WithDescription("Endpoints for verifying emails");
+
     }
 }

@@ -5,5 +5,5 @@ namespace EmailVerificationService.Application.Abstractions;
 
 public interface IEmailVerificationService
 {
-    Task<EmailVerificationResult> RequestEmailVerificationAsync(EmailVerificationInput input, CancellationToken ct = default);
+    Task<EmailVerificationRequestResult> RequestEmailVerificationAsync(EmailVerificationInput input, CancellationToken ct = default);
 }

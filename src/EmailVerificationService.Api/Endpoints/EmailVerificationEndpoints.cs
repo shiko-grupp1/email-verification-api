@@ -18,19 +18,37 @@ public static class EmailVerificationEndpoints
             .WithName("RequestEmailVerification")
             .WithSummary("Request email verification")
             .WithDescription("Generates a verification code and sends a verification email request to Azure Service Bus.")
-            .Produces<EmailVerificationResult>(StatusCodes.Status202Accepted)
+            .Produces<EmailVerificationRequestResult>(StatusCodes.Status202Accepted)
+            .Produces(StatusCodes.Status400BadRequest);
+        
+
+        group.MapPost("/verify", VerifyEmailCodeEndpoint)
+            .WithName("VerifyEmail")
+            .WithSummary("Verify email")
+            .WithDescription("Checks whether the submitted verification code matches the verification code sent to the specified email address. If valid, the email is marked as verified.")
+            .Produces<VerifyEmailCodeResult>(StatusCodes.Status200OK)
             .Produces(StatusCodes.Status401Unauthorized);
 
+        group.MapGet("/status/{email}", CheckVerificationStatusEndpoint)
+            .WithName("CheckEmailVerificationStatus")
+            .WithSummary("Check email verification status")
+            .WithDescription("Checks whether the specified email address has been verified.")
+            .Produces<EmailVerificationStatusResult>(StatusCodes.Status200OK)
+            .Produces(StatusCodes.Status400BadRequest)
+            .Produces(StatusCodes.Status401Unauthorized);
     }
 
     private static async Task<IResult> RequestEmailVerificationEndpoint(IEmailVerificationService service, EmailVerificationRequest request, CancellationToken ct = default)
     {
+        if (string.IsNullOrWhiteSpace(request.Email))
+            return Results.BadRequest("Email is required.");
+
         EmailVerificationInput input = new(request.Email);
 
-        EmailVerificationResult result = await service.RequestEmailVerificationAsync(input, ct);
+        EmailVerificationRequestResult result = await service.RequestEmailVerificationAsync(input, ct);
 
-        return result.IsVerified
-            ? Results.Accepted()
+        return result.IsSuccess
+            ? Results.Accepted(value: result)
             : Results.BadRequest(result.Error);
     }
 }

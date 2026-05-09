@@ -1,3 +1,4 @@
+using Azure.Messaging.ServiceBus;
 using EmailVerificationService.Api.Endpoints;
 using EmailVerificationService.Api.OpenApi;
 using EmailVerificationService.Api.Security;
@@ -12,6 +13,15 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddOpenApiConfiguration();
 builder.Services.AddCorsConfiguration();
+builder.Services.AddMemoryCache();
+
+builder.Services.AddSingleton(_ =>
+{
+    var connectionString = builder.Configuration.GetConnectionString("AzureServiceBusConnection")
+        ?? throw new InvalidOperationException("AzureServiceBus connecting string is missing.");
+
+    return new ServiceBusClient(connectionString);
+});
 
 builder.Services.Configure<EmailVerificationOptions>(
     builder.Configuration.GetSection("EmailVerification"));
@@ -20,7 +30,8 @@ builder.Services.Configure<AzureServiceBusOptions>(
 
 builder.Services.AddScoped<IEmailVerificationService, EmailVerificationManager>();
 builder.Services.AddScoped<IVerificationEmailPublisher, ServiceBusVerificationEmailPublisher>();
-builder.Services.AddScoped<IEmailVerificationCodeStore, EmailVerificationCodeStore>();
+// en instans som delas över hela applikationen, alltså en lagringsplats
+builder.Services.AddSingleton<IEmailVerificationCodeStore, EmailVerificationCodeStore>();
 
 var app = builder.Build();
 

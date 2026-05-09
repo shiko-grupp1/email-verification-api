@@ -29,13 +29,6 @@ public static class EmailVerificationEndpoints
             .Produces<VerifyEmailCodeResult>(StatusCodes.Status200OK)
             .Produces(StatusCodes.Status401Unauthorized);
 
-        group.MapGet("/status/{email}", CheckVerificationStatusEndpoint)
-            .WithName("CheckEmailVerificationStatus")
-            .WithSummary("Check email verification status")
-            .WithDescription("Checks whether the specified email address has been verified.")
-            .Produces<EmailVerificationStatusResult>(StatusCodes.Status200OK)
-            .Produces(StatusCodes.Status400BadRequest)
-            .Produces(StatusCodes.Status401Unauthorized);
     }
 
     private static async Task<IResult> RequestEmailVerificationEndpoint(IEmailVerificationService service, EmailVerificationRequest request, CancellationToken ct = default)
@@ -50,5 +43,19 @@ public static class EmailVerificationEndpoints
         return result.IsSuccess
             ? Results.Accepted(value: result)
             : Results.BadRequest(result.Error);
+    }
+
+    private static async Task<IResult> VerifyEmailCodeEndpoint(IEmailVerificationService service, VerifyEmailCodeRequest request, CancellationToken ct = default)
+    {
+        if (string.IsNullOrWhiteSpace(request.Email) || string.IsNullOrWhiteSpace(request.Code))
+            return Results.BadRequest("Email and code are required.");
+
+        VerifyEmailCodeInput input = new(request.Email, request.Code);
+
+        VerifyEmailCodeResult result = await service.VerifyEmailCodeAsync(input, ct);
+
+        return result.IsSuccess
+            ? Results.Ok(result)
+            : Results.Unauthorized();
     }
 }

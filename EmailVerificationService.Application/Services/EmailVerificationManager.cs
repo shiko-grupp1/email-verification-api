@@ -26,9 +26,9 @@ public sealed class EmailVerificationManager(IVerificationEmailPublisher emailPu
         int expiresInMinutes = _options.CodeExpirationMinutes;
         DateTimeOffset expiresAtUtc = issuedAtUtc.AddMinutes(expiresInMinutes);
 
-        EmailVerificationCodeEntry codeEntry = new(normalizedEmail, verificationCode, issuedAtUtc, expiresAtUtc);
+        EmailVerificationCodeEntry entry = new(normalizedEmail, verificationCode, issuedAtUtc, expiresAtUtc);
 
-        bool isStored = await codeStore.CacheCodeAsync(codeEntry, ct);
+        bool isStored = await codeStore.CacheCodeAsync(entry, ct);
         if (!isStored)
             return EmailVerificationRequestResult.Failure("Unable to store verification code");
 
@@ -45,4 +45,33 @@ public sealed class EmailVerificationManager(IVerificationEmailPublisher emailPu
 
     }
 
+    public async Task<VerifyEmailCodeResult> VerifyEmailCodeAsync(VerifyEmailCodeInput input, CancellationToken ct = default)
+    {
+        if (string.IsNullOrWhiteSpace(input.Email))
+            return VerifyEmailCodeResult.Failure("Email address is required.");
+
+        if (string.IsNullOrWhiteSpace(input.Code))
+            return VerifyEmailCodeResult.Failure("Verification code is required.");
+
+        string normalizedEmail = EmailHelpers.NormalizeEmail(input.Email);
+        string normalizedCode = input.Code.Trim();
+
+        EmailVerificationCodeEntry? entry = await codeStore.GetCodeAsync(normalizedEmail, ct);
+        if (entry is null)
+            return VerifyEmailCodeResult.Failure("Verification code has expired or does not exist.");
+
+        if (entry.ExpiresAtUtc <= DateTimeOffset.UtcNow)
+        {
+            await codeStore.RemoveCodeAsync(entry.Email, ct);
+
+            return VerifyEmailCodeResult.Failure("Verification code has expired.");
+        }
+
+        if (entry.Code != normalizedCode)
+            return VerifyEmailCodeResult.Failure("Invalid verification code.");
+
+
+        await codeStore.RemoveCodeAsync(entry.Email, ct);
+        return VerifyEmailCodeResult.Success(normalizedEmail);
+    }
 }

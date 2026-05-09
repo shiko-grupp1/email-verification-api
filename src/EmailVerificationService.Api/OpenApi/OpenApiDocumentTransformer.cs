@@ -14,16 +14,16 @@ public sealed class OpenApiDocumentTransformer : IOpenApiDocumentTransformer
         document.Info.Description = """
         ## Introduction
 
-        The Email Verification Service API handles email verification requests for the platform.
-
+        The Email Verification Service API provides endpoints for requesting and verifying email verification codes.
+        
         The service is responsible for:
-        - generating verification codes
+        - generating a temporary 6-digit verification code
+        - storing the code until it expires
         - validating verification codes
-        - checking if an email is verified
-        - sending email requests to Azure Service Bus
+        - publishing verification email messages to Azure Service Bus
 
-        When a verification email needs to be sent, the service sends a message to Azure Service Bus. The Email Sender Function processes the message and sends the email through Azure Communication Services.
-
+        When an email verification is requested, the API creates a temporary verification code, stores it, and publishes a message to Azure Service Bus. The Email Sender Function then processes the queued message and sends the email through Azure Communication Services.
+        
         """;
 
         return Task.CompletedTask;

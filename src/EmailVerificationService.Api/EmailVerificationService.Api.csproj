@@ -4,11 +4,17 @@
     <TargetFramework>net10.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>06418363-6a00-4a7a-97d6-5062ee5d51e5</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.7" />
     <PackageReference Include="Scalar.AspNetCore" Version="2.14.11" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\EmailVerificationService.Application\EmailVerificationService.Application.csproj" />
+    <ProjectReference Include="..\EmailVerificationService.Infrastructure\EmailVerificationService.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

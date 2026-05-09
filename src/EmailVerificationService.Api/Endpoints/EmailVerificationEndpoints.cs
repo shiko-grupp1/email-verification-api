@@ -27,8 +27,8 @@ public static class EmailVerificationEndpoints
             .WithSummary("Verify email")
             .WithDescription("Checks whether the submitted verification code matches the verification code sent to the specified email address. If valid, the email is marked as verified.")
             .Produces<VerifyEmailCodeResult>(StatusCodes.Status200OK)
-            .Produces(StatusCodes.Status401Unauthorized);
-
+            // gör ingen autentisering. Kollar bara om kod finns/giltig
+            .Produces(StatusCodes.Status400BadRequest);
     }
 
     private static async Task<IResult> RequestEmailVerificationEndpoint(IEmailVerificationService service, EmailVerificationRequest request, CancellationToken ct = default)
@@ -56,6 +56,7 @@ public static class EmailVerificationEndpoints
 
         return result.IsSuccess
             ? Results.Ok(result)
-            : Results.Unauthorized();
+            : Results.BadRequest(result.Error);
     }
+
 }

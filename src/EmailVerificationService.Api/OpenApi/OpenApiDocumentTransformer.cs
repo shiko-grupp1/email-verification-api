@@ -2,7 +2,7 @@
 using Microsoft.OpenApi;
 
 namespace EmailVerificationService.Api.OpenApi;
-
+// Provides an overall description of the API.
 public sealed class OpenApiDocumentTransformer : IOpenApiDocumentTransformer
 {
     public Task TransformAsync(OpenApiDocument document, OpenApiDocumentTransformerContext context, CancellationToken cancellationToken)

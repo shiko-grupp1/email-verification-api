@@ -12,7 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\EmailVerificationService.Application\EmailVerificationService.Application.csproj" />
+    <ProjectReference Include="..\EmailVerificationService.Application\EmailVerificationService.Application.csproj" />
   </ItemGroup>
 
 </Project>

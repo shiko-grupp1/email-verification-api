@@ -13,7 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\src\EmailVerificationService.Contracts\EmailVerificationService.Contracts.csproj" />
+    <ProjectReference Include="..\EmailVerificationService.Contracts\EmailVerificationService.Contracts.csproj" />
   </ItemGroup>
 
 </Project>

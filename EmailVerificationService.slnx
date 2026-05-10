@@ -1,5 +1,5 @@
 <Solution>
-  <Project Path="EmailVerificationService.Application/EmailVerificationService.Application.csproj" Id="5ea1d847-39a6-41e8-af4e-649ec297750c" />
+  <Project Path="src/EmailVerificationService.Application/EmailVerificationService.Application.csproj" Id="5ea1d847-39a6-41e8-af4e-649ec297750c" />
   <Project Path="src/EmailVerificationService.Api/EmailVerificationService.Api.csproj" Id="df0cf39c-7cfe-4e05-8002-130f73de5900" />
   <Project Path="src/EmailVerificationService.Contracts/EmailVerificationService.Contracts.csproj" Id="e335ac07-4c6e-40e6-9b32-6eceacd3d785" />
   <Project Path="src/EmailVerificationService.Infrastructure/EmailVerificationService.Infrastructure.csproj" Id="2af8804f-77d6-4a9f-845c-8479660cf834" />

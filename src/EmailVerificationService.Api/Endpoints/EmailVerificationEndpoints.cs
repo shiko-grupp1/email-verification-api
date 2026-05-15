@@ -13,12 +13,6 @@ public static class EmailVerificationEndpoints
             .WithTags("Email Verification")
             .WithDescription("Endpoints for verifying emails");
 
-        group.MapGet("/api/test", () => "API is working")
-            .WithName("TestEndpoint")
-            .WithSummary("Test endpoint")
-            .WithDescription("A simple endpoint to test if the API is working.")
-            .Produces<string>(StatusCodes.Status200OK);
-
         // Provides description for the specific endpoint, which will be used in the OpenAPI documentation
         group.MapPost("/request", RequestEmailVerificationEndpoint)
             .WithName("RequestEmailVerification")

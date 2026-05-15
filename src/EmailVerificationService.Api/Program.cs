@@ -35,10 +35,7 @@ builder.Services.AddSingleton<IEmailVerificationCodeStore, EmailVerificationCode
 
 var app = builder.Build();
 
-if (app.Environment.IsDevelopment())
-{
-    app.MapOpenApiEndpoints();
-}
+app.MapOpenApiEndpoints();
 
 app.UseCors("Frontend");
 

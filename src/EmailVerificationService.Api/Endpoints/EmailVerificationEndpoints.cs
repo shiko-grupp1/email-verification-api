@@ -1,4 +1,5 @@
 ﻿using EmailVerificationService.Api.Requests;
+using EmailVerificationService.Api.Security;
 using EmailVerificationService.Application.Abstractions;
 using EmailVerificationService.Application.Inputs;
 using EmailVerificationService.Application.Shared.Results;
@@ -10,6 +11,7 @@ public static class EmailVerificationEndpoints
     public static void MapEmailVerificationEndpoints(this WebApplication app)
     {
         RouteGroupBuilder group = app.MapGroup("/api/verification")
+            .AddEndpointFilter<ApiKeyAuthFilter>()
             .WithTags("Email Verification")
             .WithDescription("Endpoints for verifying emails");
 

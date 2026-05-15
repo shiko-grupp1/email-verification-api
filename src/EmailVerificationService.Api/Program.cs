@@ -15,6 +15,10 @@ builder.Services.AddOpenApiConfiguration();
 builder.Services.AddCorsConfiguration();
 builder.Services.AddMemoryCache();
 
+builder.Services.Configure<ApiKeyOptions>(builder.Configuration.GetSection(ApiKeyOptions.SectionName));
+
+builder.Services.AddScoped<ApiKeyAuthFilter>();
+
 builder.Services.AddSingleton(_ =>
 {
     var connectionString = builder.Configuration.GetConnectionString("AzureServiceBusConnection")
